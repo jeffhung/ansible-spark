@@ -1,0 +1,5 @@
+---
+spark_url_base: "http://www.apache.org/dist/spark"
+
+spark_dir_base: /opt
+

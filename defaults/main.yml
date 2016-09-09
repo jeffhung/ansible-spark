@@ -1,0 +1,25 @@
+---
+## Which Spark version to use:
+## - 1.5.2
+## - 1.6.1
+## - 1.6.2
+## - 2.0.0
+spark_version: 1.6.2
+
+## Which bundled prebuilt Hadoop to use:
+## - hadoop2.7: pre-built for Hadoop 2.7 or later
+## - hadoop2.6: pre-built for Hadoop 2.6
+## - hadoop2.4: pre-built for Hadoop 2.4
+## - hadoop2.3: pre-built for Hadoop 2.3
+## - without-hadoop: pre-built with user-provided Hadoop (no hadoop bundled)
+spark_bundle_hadoop: hadoop2.6
+
+## Which environment to deploy:
+## - devel: provision devel-time environment for developing with Spark
+## - build: provision build-time environment for packaging Spark (n/a)
+spark_environment: devel
+
+## Cache directory for holding downloaded/generated files.
+## The default is /vagrant/files so cache persist between boxes.
+spark_cache_dir: /vagrant/files
+

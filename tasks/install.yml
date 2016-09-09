@@ -1,0 +1,40 @@
+---
+
+- name: Set spark_bundle_name
+  set_fact:
+    spark_bundle_name: "spark-{{ spark_version }}-bin-{{ spark_bundle_hadoop }}"
+- debug: var=spark_bundle_name
+
+- name: Load spark binary tarbll MD5
+  set_fact:
+    spark_binary_md5: "{{ item.split(': ')|last|replace(' ', '')|lower }}"
+  with_url: [ "{{ spark_url_base }}/spark-{{ spark_version }}/{{ spark_bundle_name }}.tgz.md5" ]
+- debug: var=spark_binary_md5
+
+- name: Download spark binary tarball
+  get_url:
+    url: "{{ spark_url_base }}/spark-{{ spark_version }}/{{ spark_bundle_name }}.tgz"
+    dest: "{{ spark_cache_dir }}/{{ spark_bundle_name }}.tgz"
+    checksum: md5:{{ spark_binary_md5 }}
+
+- name: Ensure {{ spark_dir_base }} exists
+  file: path={{ spark_dir_base }} state=directory
+  become: yes
+
+- name: Unpack Spark distribution
+  unarchive:
+    src:   "{{ spark_bundle_name }}.tgz"
+    dest:  "{{ spark_dir_base }}"
+    owner: root
+    group: root
+    creates: "{{ spark_dir_base }}/{{ spark_bundle_name }}/LICENSE"
+  become: yes
+
+- name: Create canonical folder with symlink
+  file: state=link path={{ spark_dir_base }}/spark src={{ spark_bundle_name }}
+  become: yes
+
+- name: Set environment variables globally
+  template: src=profile.sh.j2 dest=/etc/profile.d/spark.sh
+  become: true
+
