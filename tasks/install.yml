@@ -11,6 +11,9 @@
   with_url: [ "{{ spark_url_base }}/spark-{{ spark_version }}/{{ spark_bundle_name }}.tgz.md5" ]
 - debug: var=spark_binary_md5
 
+- name: Ensure {{ spark_cache_dir }} exists
+  file: path={{ spark_cache_dir }} state=directory
+
 - name: Download spark binary tarball
   get_url:
     url: "{{ spark_url_base }}/spark-{{ spark_version }}/{{ spark_bundle_name }}.tgz"
@@ -23,10 +26,11 @@
 
 - name: Unpack Spark distribution
   unarchive:
-    src:   "{{ spark_bundle_name }}.tgz"
+    src:   "{{ spark_cache_dir }}/{{ spark_bundle_name }}.tgz"
     dest:  "{{ spark_dir_base }}"
     owner: root
     group: root
+    copy:  no
     creates: "{{ spark_dir_base }}/{{ spark_bundle_name }}/LICENSE"
   become: yes
 
