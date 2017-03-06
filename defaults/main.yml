@@ -4,6 +4,7 @@
 ## - 1.6.1
 ## - 1.6.2
 ## - 2.0.0
+## - 2.1.0
 spark_version: 1.6.2
 
 ## Which bundled prebuilt Hadoop to use:
