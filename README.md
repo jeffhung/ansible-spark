@@ -2,9 +2,59 @@
 
 Ansible playbook for installing Spark on CentOS/Debian Linux
 
+
+## Installing
+
 Install this playbook:
 
 	ansible-galaxy install jeffhung.spark
+
+## Testing with Vagrant
+
+After [installing](#installing) this playbook, you could create a working
+folder with the following `Vagrantfile` and `site.yml` in folder root, to run
+vagrant box locally:
+
+`Vagrantfile`:
+
+```
+Vagrant.configure("2") do |config|
+  config.vm.box = "centos/6"
+  config.vm.provider "virtualbox" do |v|
+    v.memory = 1024 # Spark need much larger memory
+  end
+  config.vm.provision "ansible" do |ansible|
+    ansible.playbook = "site.yml"
+  end
+	# spark console service port:
+  config.vm.network :forwarded_port, host: 8080, guest: 8080
+end
+```
+
+`site.yml`:
+
+```
+- hosts: default
+  roles:
+		- jeffhung.spark
+```
+
+Try to invoke `spark-shell`:
+
+```
+$ vagrant ssh
+Last login: Mon Mar  6 06:17:02 2017 from 10.0.2.2
+[vagrant@cattools-lab ~]$ spark-shell --version
+Welcome to
+      ____              __
+     / __/__  ___ _____/ /__
+    _\ \/ _ \/ _ `/ __/  '_/
+   /___/ .__/\_,_/_/ /_/\_\   version 1.6.2
+      /_/
+
+Type --help for more information.
+[vagrant@cattools-lab ~]$
+```
 
 
 ## Role Variables
